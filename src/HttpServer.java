@@ -1,13 +1,10 @@
 package host;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 
-import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpExchange;
 
 public class HttpServer {
 	private com.sun.net.httpserver.HttpServer http;
@@ -20,14 +17,16 @@ public class HttpServer {
 		http.setExecutor(e);
 	}
 	
-	public void setDefaultHandler(HttpResponseHandler response) throws IOException {
+	public HttpHandler setDefaultHandler(HttpResponseHandler response) throws IOException {
 		HttpContext context = http.createContext("/");
 		context.setHandler((e) -> response.handle(new HttpRequest(e), new HttpResponse(e)));
+		return new HttpHandler(context);
 	}
 	
-	public void addHandler(String url, HttpResponseHandler response) throws IOException {
+	public HttpHandler addHandler(String url, HttpResponseHandler response) throws IOException {
 		HttpContext context = http.createContext(url);
 		context.setHandler((e) -> response.handle(new HttpRequest(e), new HttpResponse(e)));
+		return new HttpHandler(context);
 	}
 	
 	public interface HttpResponseHandler{

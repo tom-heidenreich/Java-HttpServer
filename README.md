@@ -1,3 +1,3 @@
 # Java-HttpServer
 
-WIKI: https://github.com/Toom-boop/Java-HttpServer/wiki
+[-> Wiki](https://github.com/Toom-boop/Java-HttpServer/wiki)

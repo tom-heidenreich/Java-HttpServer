@@ -1,7 +1,5 @@
 # Java-HttpServer
 
-# Java-HttpServer Wiki!
-
 ## Create Server
 
 ```JAVA

@@ -1,5 +1,3 @@
-package host;
-
 import com.sun.net.httpserver.HttpExchange;
 
 public class AuthenticatonHandler extends BasicAuthenticator {

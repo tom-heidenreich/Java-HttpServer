@@ -1,8 +1,3 @@
-/*
- * Decompiled with CFR 0.137.
- */
-package api.http;
-
 public class Cookie {
     private final String key;
     private final String value;

@@ -1,5 +1,3 @@
-package api.http;
-
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
 

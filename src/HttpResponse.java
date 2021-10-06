@@ -1,8 +1,3 @@
-/*
- * Decompiled with CFR 0.137.
- */
-package api.http;
-
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.OutputStream;

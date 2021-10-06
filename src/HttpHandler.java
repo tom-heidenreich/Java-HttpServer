@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.137.
- */
 package api.http;
 
 import com.sun.net.httpserver.Authenticator;

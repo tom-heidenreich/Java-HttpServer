@@ -7,7 +7,6 @@ import java.util.concurrent.Executor;
 
 public class HttpServer {
     private com.sun.net.httpserver.HttpServer http;
-    private ServerSecurity security = ServerSecurity.Security.NO_SECURITY.get();
 
     public HttpServer(InetSocketAddress inetAddress, int backlog) throws IOException {
         this.http = com.sun.net.httpserver.HttpServer.create(inetAddress, backlog);
@@ -29,20 +28,10 @@ public class HttpServer {
         this.http.setExecutor(e);
     }
 
-    public void setServerSecurity(ServerSecurity security) {
-        this.security = security;
-    }
-
-    public void setServerSecurity(ServerSecurity.Security security) {
-        this.setServerSecurity(security.get());
-    }
-
     public HttpHandler setDefaultHandler(HttpResponseHandler response) throws IOException {
         HttpContext context = this.http.createContext("/");
         context.setHandler(e -> {
-            if (this.security.authenticate(e)) {
-                response.handle(new HttpRequest(e), new HttpResponse(e));
-            }
+            response.handle(new HttpRequest(e), new HttpResponse(e));
         });
         return new HttpHandler(context);
     }
@@ -50,9 +39,7 @@ public class HttpServer {
     public HttpHandler addHandler(String url, HttpResponseHandler response) throws IOException {
         HttpContext context = this.http.createContext(url);
         context.setHandler(e -> {
-            if (this.security.authenticate(e)) {
-                response.handle(new HttpRequest(url, e), new HttpResponse(e));
-            }
+            response.handle(new HttpRequest(url, e), new HttpResponse(e));
         });
         return new HttpHandler(context);
     }

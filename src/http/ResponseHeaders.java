@@ -1,3 +1,5 @@
+package http;
+
 import com.sun.net.httpserver.Headers;
 
 public class ResponseHeaders {

@@ -1,3 +1,5 @@
+package http;
+
 public class Cookie {
     private final String key;
     private final String value;

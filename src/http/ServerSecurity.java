@@ -1,3 +1,5 @@
+package http;
+
 import com.sun.net.httpserver.HttpExchange;
 
 public class ServerSecurity {

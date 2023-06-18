@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+import http.HttpServer;
+
 public class ExampleServer {
   public static void main(String[] args) throws IOException {
 		HttpServer server = new HttpServer(new InetSocketAddress(80), 0);

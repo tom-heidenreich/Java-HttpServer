@@ -1,3 +1,9 @@
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+import http.AuthenticatonHandler;
+import http.HttpServer;
+
 public class AuthServer {
 	public static void main(String[] args) throws IOException{
 		HttpServer server = new HttpServer(new InetSocketAddress(80), 0);

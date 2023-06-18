@@ -40,12 +40,29 @@ public class HttpServer {
         return new HttpHandler(context);
     }
 
-    public HttpHandler addHandler(String url, HttpResponseHandler response) throws IOException {
+    public HttpHandler handle(String method, String url, HttpResponseHandler response) throws IOException {
         HttpContext context = this.http.createContext(url);
         context.setHandler(e -> {
-            response.handle(new HttpRequest(url, e), new HttpResponse(e));
+            if(e.getRequestMethod().equals(method)) response.handle(new HttpRequest(url, e), new HttpResponse(e));
+            return;
         });
         return new HttpHandler(context);
+    }
+
+    public HttpHandler get(String url, HttpResponseHandler response) throws IOException {
+        return this.handle("GET", url, response);
+    }
+
+    public HttpHandler post(String url, HttpResponseHandler response) throws IOException {
+        return this.handle("POST", url, response);
+    }
+
+    public HttpHandler put(String url, HttpResponseHandler response) throws IOException {
+        return this.handle("PUT", url, response);
+    }
+
+    public HttpHandler delete(String url, HttpResponseHandler response) throws IOException {
+        return this.handle("DELETE", url, response);
     }
 
     public void start() {

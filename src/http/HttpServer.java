@@ -13,6 +13,18 @@ public class HttpServer {
         this.http = com.sun.net.httpserver.HttpServer.create(inetAddress, backlog);
     }
 
+    public HttpServer(InetSocketAddress inetAddress) throws IOException {
+        this(inetAddress, 0);
+    }
+
+    public HttpServer(int port, int backlog) throws IOException {
+        this(new InetSocketAddress(port), backlog);
+    }
+
+    public HttpServer(int port) throws IOException {
+        this(port, 0);
+    }
+
     public void setExecutor(Executor e) {
         this.http.setExecutor(e);
     }

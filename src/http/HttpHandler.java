@@ -1,6 +1,5 @@
 package http;
 
-import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
 
 public class HttpHandler {
@@ -8,10 +7,6 @@ public class HttpHandler {
 
     public HttpHandler(HttpContext context) {
         this.context = context;
-    }
-
-    public void setAuthenticator(Authenticator e) {
-        this.context.setAuthenticator(e);
     }
 }
 

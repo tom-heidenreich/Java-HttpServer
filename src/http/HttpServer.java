@@ -29,9 +29,13 @@ public class HttpServer {
     }
 
     public HttpHandler setDefaultHandler(HttpResponseHandler response) throws IOException {
-        HttpContext context = this.http.createContext("/");
+        return this.addHandler("/", response);
+    }
+
+    public HttpHandler addHandler(String url, HttpResponseHandler response) throws IOException {
+        HttpContext context = this.http.createContext(url);
         context.setHandler(e -> {
-            response.handle(new HttpRequest(e), new HttpResponse(e));
+            response.handle(new HttpRequest(url, e), new HttpResponse(e));
         });
         return new HttpHandler(context);
     }

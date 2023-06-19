@@ -26,7 +26,7 @@ public class HttpResponse {
     
     public void writeHead(int status, ResponseHeadersHandler handler) {
         handler.handle(new ResponseHeaders(this.e.getResponseHeaders()));
-        this.write(status);
+        this.writeHead(status);
     }
 
     public void write(String payload) {

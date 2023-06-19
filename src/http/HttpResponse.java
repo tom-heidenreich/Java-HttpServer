@@ -51,10 +51,31 @@ public class HttpResponse {
         this.ended = true;
     }
 
+    public HttpResponse status(int status) {
+        if(this.headersSent) throw new IllegalStateException("Headers already sent");
+        this.writeHead(status);
+        return this;
+    }
+
+    public void send(String payload) {
+        if(!this.headersSent) this.writeHead(200);
+        this.write(payload);
+        this.end();
+    }
+
+    public void send(int status, String payload) {
+        this.writeHead(status);
+        this.write(payload);
+        this.end();
+    }
+
+    public void redirect(String location) {
+        this.writeHead(302);
+        this.e.getResponseHeaders().set("Location", location);
+        this.end();
+    }
 
     public static interface ResponseHeadersHandler {
         public void handle(ResponseHeaders var1);
     }
-
 }
-

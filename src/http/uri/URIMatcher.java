@@ -1,4 +1,4 @@
-package http;
+package http.uri;
 
 import java.net.URI;
 import java.util.Arrays;

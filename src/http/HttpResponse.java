@@ -7,6 +7,9 @@ import java.io.OutputStream;
 public class HttpResponse {
     private HttpExchange e;
 
+    private boolean headersSent = false;
+    private boolean ended = false;
+
     public HttpResponse(HttpExchange e) {
         this.e = e;
     }
@@ -14,6 +17,7 @@ public class HttpResponse {
     public void writeHead(int status) {
         try {
             this.e.sendResponseHeaders(status, 0L);
+            this.headersSent = true;
         }
         catch (IOException e1) {
             e1.printStackTrace();
@@ -21,27 +25,16 @@ public class HttpResponse {
     }
     
     public void writeHead(int status, ResponseHeadersHandler handler) {
-        try {
-            handler.handle(new ResponseHeaders(this.e.getResponseHeaders()));
-            this.e.sendResponseHeaders(status, 0L);
-        }
-        catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        handler.handle(new ResponseHeaders(this.e.getResponseHeaders()));
+        this.write(status);
     }
 
     public void write(String payload) {
-        try {
-            OutputStream output = this.e.getResponseBody();
-            output.write(payload.getBytes());
-            output.flush();
-        }
-        catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        this.write(payload.getBytes());
     }
 
     public void write(byte[] payload) {
+        if(this.ended) throw new IllegalStateException("Response already ended");
         try {
             OutputStream output = this.e.getResponseBody();
             output.write(payload);
@@ -54,6 +47,7 @@ public class HttpResponse {
 
     public void end() {
         this.e.close();
+        this.ended = true;
     }
 
     public void write(int payload) {

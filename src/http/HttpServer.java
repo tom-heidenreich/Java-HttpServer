@@ -1,15 +1,57 @@
 package http;
 
-import com.sun.net.httpserver.HttpContext;
+import http.uri.URIMatcher;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.LinkedList;
 import java.util.concurrent.Executor;
 
 public class HttpServer {
     private com.sun.net.httpserver.HttpServer http;
 
+    private final URIMatcher<HttpHandler> matcher = new URIMatcher<>();
+
     public HttpServer(InetSocketAddress inetAddress, int backlog) throws IOException {
         this.http = com.sun.net.httpserver.HttpServer.create(inetAddress, backlog);
+
+        // create context to handle all requests
+        this.http.createContext("/", exchange -> {
+            try {
+                HttpRequest req = new HttpRequest(exchange);
+                HttpResponse res = new HttpResponse(exchange);
+
+                // find the handler
+                LinkedList<HttpHandler> handlers = (LinkedList<HttpHandler>) this.matcher.matches(req.getRequestURI());
+
+                if(handlers.size() == 0) {
+                    res.writeHead(404);
+                    res.write("404 Not Found");
+                    res.end();
+                    return;
+                }
+
+                // remove handlers that don't accept the request
+                handlers.removeIf(e -> !e.accepts(req));
+
+                if(handlers.size() == 0) {
+                    res.writeHead(405);
+                    res.write("405 Method Not Allowed");
+                    res.end();
+                    return;
+                }
+
+                handlers.getLast().handle(req, res);
+
+            }catch(Exception e) {
+                e.printStackTrace();
+
+                HttpResponse res = new HttpResponse(exchange);
+                res.writeHead(500);
+                res.write("500 Internal Server Error");
+                res.end();
+            }
+        });
     }
 
     public HttpServer(InetSocketAddress inetAddress) throws IOException {
@@ -33,20 +75,18 @@ public class HttpServer {
     }
 
     public HttpHandler addHandler(String url, HttpResponseHandler response) throws IOException {
-        HttpContext context = this.http.createContext(url);
-        context.setHandler(e -> {
-            response.handle(new HttpRequest(url, e), new HttpResponse(e));
-        });
-        return new HttpHandler(context);
+        return this.handle("*", url, response);
     }
 
     public HttpHandler handle(String method, String url, HttpResponseHandler response) throws IOException {
-        HttpContext context = this.http.createContext(url);
-        context.setHandler(e -> {
-            if(e.getRequestMethod().equals(method)) response.handle(new HttpRequest(url, e), new HttpResponse(e));
-            return;
-        });
-        return new HttpHandler(context);
+        HttpHandler handler = new HttpHandler(response) {
+            @Override
+            public boolean accepts(HttpRequest request) {
+                return method.equals("*") || method.equals(request.getRequestMethod());
+            }
+        };
+        this.matcher.add(url, handler);
+        return handler;
     }
 
     public HttpHandler get(String url, HttpResponseHandler response) throws IOException {

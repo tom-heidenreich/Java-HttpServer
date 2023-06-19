@@ -1,7 +1,9 @@
 # Java-HttpServer
 
 ## Create Server
-
+```JAVA
+HttpServer server = new HttpServer(80);
+```
 ```JAVA
 HttpServer server = new HttpServer(new InetSocketAddress(80), 0);
 ```

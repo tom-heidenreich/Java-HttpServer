@@ -70,8 +70,9 @@ public class HttpResponse {
     }
 
     public void redirect(String location) {
-        this.writeHead(302);
-        this.e.getResponseHeaders().set("Location", location);
+        this.writeHead(302, headers -> {
+            headers.setHeader("Location", location);
+        });
         this.end();
     }
 

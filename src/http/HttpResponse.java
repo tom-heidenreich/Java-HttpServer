@@ -50,9 +50,6 @@ public class HttpResponse {
         this.ended = true;
     }
 
-    public void write(int payload) {
-        this.write(String.valueOf(payload));
-    }
 
     public static interface ResponseHeadersHandler {
         public void handle(ResponseHeaders var1);

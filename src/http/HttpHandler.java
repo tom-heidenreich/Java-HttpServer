@@ -1,12 +1,18 @@
 package http;
 
-import com.sun.net.httpserver.HttpContext;
+import http.HttpServer.HttpResponseHandler;
 
-public class HttpHandler {
-    private final HttpContext context;
+public abstract class HttpHandler {
 
-    public HttpHandler(HttpContext context) {
-        this.context = context;
+    private final HttpResponseHandler handler;
+
+    public HttpHandler(HttpResponseHandler handler) {
+        this.handler = handler;
+    }
+
+    public abstract boolean accepts(HttpRequest request);
+    
+    public void handle(HttpRequest request, HttpResponse response) {
+        this.handler.handle(request, response);
     }
 }
-

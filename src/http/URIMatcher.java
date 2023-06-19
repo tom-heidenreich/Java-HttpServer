@@ -104,6 +104,16 @@ public class URIMatcher<E> {
 
         // filter out the nodes that are not final
         nodes.removeIf(e -> e instanceof ContinueNode);
-        return nodes.stream().map(e -> ((FinalNode) e).content).collect(Collectors.toList());
+        return nodes.stream().map(e -> ((FinalNode) e).content).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public E matchesOne(URI uri) {
+        LinkedList<E> list = (LinkedList<E>) this.matches(uri);
+        if(list.size() == 0) return null;
+        return list.getLast();
+    }
+
+    public E matchesOne(String uri) {
+        return this.matchesOne(URI.create(uri));
     }
 }

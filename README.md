@@ -19,6 +19,7 @@ server.setExecutor(Executors.newSingleThreadExecutor());
 server.setExecutor(Executors.newFixedThreadPool(10));
 ```
 * ### Multi Threads
+This is the default executor.
 ```JAVA
 server.setExecutor(Executors.newCachedThreadPool());
 ```
@@ -26,13 +27,25 @@ server.setExecutor(Executors.newCachedThreadPool());
 ***
 
 ## Set Handler
-* ### DefaultHandler
+* ### Handle GET requests
 ```JAVA
-server.setDefaultHandler((req, res) -> {
+server.get("/home", (req, res) -> {
 
 });
 ```
-* ### Handler
+* ### Handle POST requests
+```JAVA
+server.post("/home", (req, res) -> {
+
+});
+```
+* ### Handle any method
+```JAVA
+server.handle("*", "/home", (req, res) -> {
+
+});
+```
+* ### Alternative
 ```JAVA
 server.addHandler("/home", (req, res) -> {
 
@@ -59,10 +72,34 @@ req.getRequestMethod();
 req.getRemoteAddress();
 ```
 
+### Cookies
+```JAVA
+Cookie[] cookies = req.getCookies();
+```
+```JAVA
+Cookie cookie = req.getCookie("name");
+```
+
+### Params
+```JAVA
+String param = req.getParam("name");
+```
+
+### Body
+```JAVA
+String body = req.getRequestBody();
+```
+```JAVA
+byte[] body = req.getRequestBodyBytes();
+```
+
 ***
 
 ## Response
 ### Head
+```JAVA
+res.status(200)
+```
 ```JAVA
 res.writeHead(200, (head) -> {
     head.setHeader("Content-Type", "text/plain");
@@ -70,9 +107,18 @@ res.writeHead(200, (head) -> {
 ```
 ### Body
 ```JAVA
+res.send("Hello World!");
+```
+Or with status code
+```JAVA
+res.send(200, "Hello World!");
+```
+You can also use write. This will not end the response and you can send bytes
+```JAVA
 res.write("Hello World!");
 ```
 ### End
+Using send will already end the response.
 ```JAVA
 res.end();
 ```

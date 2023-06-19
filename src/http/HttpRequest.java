@@ -10,21 +10,16 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class HttpRequest {
+
     private HttpExchange e;
-    private String uri;
+    private String path;
     private HashMap<String, String> params;
 
     public HttpRequest(HttpExchange e) {
-        this("", e);
-    }
-
-    public HttpRequest(String uri, HttpExchange e) {
         this.e = e;
-        this.uri = e.getRequestURI().toASCIIString().replaceFirst(uri, "");
-        if (this.uri.contains("?")) {
-            this.setParams(this.uri.substring(this.uri.indexOf("?") + 1, this.uri.length()));
-            this.uri = this.uri.substring(0, this.uri.indexOf("?"));
-        }
+        
+        this.path = e.getRequestURI().getPath();
+        this.setParams(e.getRequestURI().getQuery());
     }
 
     public InetSocketAddress getLocalAddress() {
@@ -32,7 +27,7 @@ public class HttpRequest {
     }
     
     public String getRequestURI() {
-        return this.uri;
+        return this.path;
     }
 
     public String getRequestMethod() {
@@ -93,6 +88,7 @@ public class HttpRequest {
     }
 
     private void setParams(String s) {
+        if(s == null) return;
         String[] params = s.split("&");
         this.params = new HashMap<String, String>();
         for (int i = 0; i < params.length; ++i) {

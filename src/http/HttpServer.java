@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class HttpServer {
     private com.sun.net.httpserver.HttpServer http;
@@ -14,6 +15,9 @@ public class HttpServer {
 
     public HttpServer(InetSocketAddress inetAddress, int backlog) throws IOException {
         this.http = com.sun.net.httpserver.HttpServer.create(inetAddress, backlog);
+
+        // default executor
+        this.http.setExecutor(Executors.newCachedThreadPool());
 
         // create context to handle all requests
         this.http.createContext("/", exchange -> {

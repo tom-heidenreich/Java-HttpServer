@@ -15,6 +15,7 @@ public class HttpResponse {
     }
 
     public void writeHead(int status) {
+        if(this.headersSent) throw new IllegalStateException("Headers already sent");
         try {
             this.e.sendResponseHeaders(status, 0L);
             this.headersSent = true;
